@@ -76,9 +76,19 @@ class SubmissionController extends Controller
             $publicPath = 'public/task_photos/';
             $fullPath = $publicPath . $filename;
             
-            // Ensure directory exists
-            if (!file_exists($publicPath)) {
-                mkdir($publicPath, 0755, true);
+            // Ensure directory exists with error handling
+            try {
+                if (!file_exists($publicPath)) {
+                    mkdir($publicPath, 0755, true);
+                }
+                
+                // Double check directory exists
+                if (!is_dir($publicPath)) {
+                    throw new \Exception('Failed to create directory: ' . $publicPath);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Directory creation failed: ' . $e->getMessage());
+                throw new \Exception('Storage directory could not be created');
             }
 
             // Save to public directory
