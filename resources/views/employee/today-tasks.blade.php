@@ -26,7 +26,7 @@
                 </h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('employee.submissions.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('employee.submissions.store') }}" method="POST" enctype="multipart/form-data" id="submissionForm">
                     @csrf
                     <input type="hidden" name="assignment_id" value="{{ $assignment->id }}">
 
@@ -141,7 +141,9 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <video id="camera" autoplay style="max-width: 100%; max-height: 300px; border-radius: 10px; object-fit: cover;"></video>
+                    <div style="max-width: 100%; max-height: 300px; overflow: hidden; border-radius: 10px; border: 2px solid #ddd;">
+                        <video id="camera" autoplay style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    </div>
                     <canvas id="canvas" style="display: none;"></canvas>
                 </div>
                 <div class="text-center mt-3">
@@ -214,6 +216,10 @@ document.getElementById('captureBtn').addEventListener('click', function() {
     const photoData = canvas.toDataURL('image/jpeg');
     document.getElementById('photo_data_' + currentItemId).value = photoData;
 
+    // Debug log
+    console.log('Photo data length:', photoData.length);
+    console.log('Photo data preview:', photoData.substring(0, 100) + '...');
+
     // Preview göster
     const preview = document.getElementById('photo_preview_' + currentItemId);
     preview.innerHTML = '<img src="' + photoData + '" class="img-fluid rounded" style="max-height: 150px;">';
@@ -250,5 +256,15 @@ function checkFormCompletion() {
         document.getElementById('submitBtn').disabled = false;
     }
 }
+
+// Form submit debug
+document.getElementById('submissionForm').addEventListener('submit', function(e) {
+    const photoInputs = document.querySelectorAll('input[name^="photo_data"]');
+    console.log('Form submitting with', photoInputs.length, 'photos');
+
+    photoInputs.forEach((input, index) => {
+        console.log('Photo', index + 1, 'length:', input.value.length);
+    });
+});
 </script>
 @endpush
