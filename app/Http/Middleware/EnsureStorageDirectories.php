@@ -15,21 +15,30 @@ class EnsureStorageDirectories
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Create storage directories
-        $directories = [
-            'storage/app/public/task_photos',
-            'storage/app/public/qrcodes',
-        ];
+        try {
+            // Create storage directories
+            $directories = [
+                'storage/app/public/task_photos',
+                'storage/app/public/qrcodes',
+            ];
 
-        foreach ($directories as $directory) {
-            if (!file_exists($directory)) {
-                mkdir($directory, 0755, true);
+            foreach ($directories as $directory) {
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0755, true);
+                }
             }
-        }
 
-        // Create storage link if it doesn't exist
-        if (!file_exists('public/storage')) {
-            symlink(storage_path('app/public'), public_path('storage'));
+            // Create storage link if it doesn't exist
+            if (!file_exists('public/storage')) {
+                try {
+                    symlink(storage_path('app/public'), public_path('storage'));
+                } catch (\Exception $e) {
+                    // Link might already exist or permission issue, ignore
+                }
+            }
+        } catch (\Exception $e) {
+            // Log error but don't break the application
+            \Log::error('Storage directory creation failed: ' . $e->getMessage());
         }
 
         return $next($request);

@@ -28,15 +28,20 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Create storage directories if they don't exist
-        $directories = [
-            'storage/app/public/task_photos',
-            'storage/app/public/qrcodes',
-        ];
+        try {
+            $directories = [
+                'storage/app/public/task_photos',
+                'storage/app/public/qrcodes',
+            ];
 
-        foreach ($directories as $directory) {
-            if (!file_exists($directory)) {
-                mkdir($directory, 0755, true);
+            foreach ($directories as $directory) {
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0755, true);
+                }
             }
+        } catch (\Exception $e) {
+            // Storage creation failed, log but don't break
+            \Log::error('Storage directory creation in AppServiceProvider failed: ' . $e->getMessage());
         }
     }
 }
