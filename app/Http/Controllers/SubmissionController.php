@@ -79,10 +79,16 @@ class SubmissionController extends Controller
             // Save to storage
             \Storage::disk('public')->put($path, $data);
 
-            \Log::info('Photo saved successfully: ' . $path);
+            // Verify file was saved
+            if (!\Storage::disk('public')->exists($path)) {
+                throw new \Exception('File was not saved successfully');
+            }
+
+            \Log::info('Photo saved successfully: ' . $path . ' (size: ' . strlen($data) . ' bytes)');
             return $path;
         } catch (\Exception $e) {
             \Log::error('Photo save error: ' . $e->getMessage());
+            \Log::error('Photo data length: ' . strlen($base64Data));
             throw $e;
         }
     }
