@@ -3,16 +3,23 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">
-                <i class="fas fa-history me-2"></i>
-                QR Tarama Geçmişi
-            </h1>
-            <a href="{{ route('admin.qr-codes.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left me-2"></i>
-                QR Kodlara Dön
-            </a>
-        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    QR Tarama Geçmişi
+                </h1>
+                <div>
+                    <a href="{{ route('admin.qr-codes.history.export') }}?{{ request()->getQueryString() }}"
+                       class="btn btn-success me-2">
+                        <i class="fas fa-download me-2"></i>
+                        Excel İndir
+                    </a>
+                    <a href="{{ route('admin.qr-codes.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        QR Kodlara Dön
+                    </a>
+                </div>
+            </div>
     </div>
 </div>
 
@@ -161,7 +168,7 @@
 
 <!-- Statistics Card -->
 <div class="row mt-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card bg-primary text-white">
             <div class="card-body text-center">
                 <h4 class="mb-0">{{ $qrScans->count() }}</h4>
@@ -169,7 +176,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card bg-success text-white">
             <div class="card-body text-center">
                 <h4 class="mb-0">{{ $qrScans->unique('user_id')->count() }}</h4>
@@ -177,11 +184,69 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card bg-info text-white">
             <div class="card-body text-center">
                 <h4 class="mb-0">{{ $qrScans->unique('qr_code_id')->count() }}</h4>
                 <small>Farklı QR Kod</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <h4 class="mb-0">{{ $qrScans->where('scanned_at', '>=', now()->startOfDay())->count() }}</h4>
+                <small>Bugünkü Tarama</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Filtreleme</h6>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="user_filter" class="form-label">Çalışan</label>
+                        <select name="user_id" id="user_filter" class="form-select">
+                            <option value="">Tümü</option>
+                            @foreach($qrScans->pluck('user')->unique() as $user)
+                                <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                                    {{ $user->full_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="location_filter" class="form-label">Lokasyon</label>
+                        <select name="location" id="location_filter" class="form-select">
+                            <option value="">Tümü</option>
+                            @foreach($qrScans->pluck('qrCode.location')->unique() as $location)
+                                <option value="{{ $location }}" {{ request('location') == $location ? 'selected' : '' }}>
+                                    {{ $location }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="date_filter" class="form-label">Tarih</label>
+                        <input type="date" name="date" id="date_filter" class="form-control"
+                               value="{{ request('date') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter me-2"></i>Filtrele
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

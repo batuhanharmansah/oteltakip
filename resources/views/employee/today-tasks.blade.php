@@ -164,13 +164,38 @@ function openCamera(itemId) {
     const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
     modal.show();
 
-    navigator.mediaDevices.getUserMedia({ video: true })
+    // Arka kamerayı kullan
+    const constraints = {
+        video: {
+            facingMode: { exact: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
             stream = mediaStream;
             document.getElementById('camera').srcObject = mediaStream;
         })
         .catch(function(err) {
-            alert('Kamera erişimi sağlanamadı: ' + err.message);
+            console.error('Arka kamera bulunamadı:', err);
+
+            // Arka kamera bulunamazsa ön kamerayı dene
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "user",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            })
+            .then(function(mediaStream) {
+                stream = mediaStream;
+                document.getElementById('camera').srcObject = mediaStream;
+            })
+            .catch(function(err) {
+                alert('Kamera erişimi sağlanamadı: ' + err.message);
+            });
         });
 }
 

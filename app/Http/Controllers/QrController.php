@@ -116,60 +116,145 @@ class QrController extends Controller
      */
     public function scan(Request $request)
     {
-        $request->validate([
-            'code' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'code' => 'required|string',
+            ]);
 
-        $qrCode = QrCode::where('code', $request->code)->first();
+            $qrCode = QrCode::where('code', $request->code)->first();
 
-        if (!$qrCode) {
+            if (!$qrCode) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Geçersiz QR kod.'
+                ], 400);
+            }
+
+            $user = auth()->user();
+
+            // Check if already scanned today
+            $existingScan = QrScan::where('user_id', $user->id)
+                ->where('qr_code_id', $qrCode->id)
+                ->whereDate('scanned_at', now())
+                ->first();
+
+            if ($existingScan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bu QR kod bugün zaten okutulmuş.'
+                ], 400);
+            }
+
+            // Create scan record
+            QrScan::create([
+                'user_id' => $user->id,
+                'qr_code_id' => $qrCode->id,
+                'scanned_at' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'QR kod taraması başarıyla kaydedildi.',
+                'data' => [
+                    'location' => $qrCode->location,
+                    'scanned_at' => now()->format('H:i:s'),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('QR Scan Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Geçersiz QR kod.'
-            ], 400);
+                'message' => 'QR kod taraması sırasında bir hata oluştu. Lütfen tekrar deneyin.'
+            ], 500);
         }
-
-        $user = auth()->user();
-
-        // Check if already scanned today
-        $existingScan = QrScan::where('user_id', $user->id)
-            ->where('qr_code_id', $qrCode->id)
-            ->whereDate('scanned_at', now())
-            ->first();
-
-        if ($existingScan) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bu QR kod bugün zaten okutulmuş.'
-            ], 400);
-        }
-
-        // Create scan record
-        QrScan::create([
-            'user_id' => $user->id,
-            'qr_code_id' => $qrCode->id,
-            'scanned_at' => now(),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'QR kod taraması başarıyla kaydedildi.',
-            'data' => [
-                'location' => $qrCode->location,
-                'scanned_at' => now()->format('H:i:s'),
-            ]
-        ]);
     }
 
     /**
      * Show QR scan history
      */
-    public function scanHistory()
+    public function scanHistory(Request $request)
     {
-        $qrScans = QrScan::with(['user', 'qrCode'])
-            ->latest()
-            ->paginate(20);
+        $query = QrScan::with(['user', 'qrCode']);
+
+        // Filter by user
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // Filter by location
+        if ($request->filled('location')) {
+            $query->whereHas('qrCode', function($q) use ($request) {
+                $q->where('location', $request->location);
+            });
+        }
+
+        // Filter by date
+        if ($request->filled('date')) {
+            $query->whereDate('scanned_at', $request->date);
+        }
+
+        $qrScans = $query->latest()->paginate(20);
 
         return view('admin.qr-codes.history', compact('qrScans'));
+    }
+
+    /**
+     * Export QR scan history to Excel
+     */
+    public function exportHistory(Request $request)
+    {
+        $query = QrScan::with(['user', 'qrCode']);
+
+        // Filter by user
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // Filter by location
+        if ($request->filled('location')) {
+            $query->whereHas('qrCode', function($q) use ($request) {
+                $q->where('location', $request->location);
+            });
+        }
+
+        // Filter by date
+        if ($request->filled('date')) {
+            $query->whereDate('scanned_at', $request->date);
+        }
+
+        $qrScans = $query->latest()->get();
+
+        $filename = 'qr_scan_history_' . now()->format('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($qrScans) {
+            $file = fopen('php://output', 'w');
+
+            // CSV headers
+            fputcsv($file, [
+                'Çalışan Adı',
+                'Çalışan E-posta',
+                'Lokasyon',
+                'Tarama Tarihi',
+                'Tarama Saati'
+            ]);
+
+            foreach ($qrScans as $scan) {
+                fputcsv($file, [
+                    $scan->user->full_name,
+                    $scan->user->email,
+                    $scan->qrCode->location,
+                    $scan->scanned_at->format('d.m.Y'),
+                    $scan->scanned_at->format('H:i:s')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

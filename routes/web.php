@@ -61,6 +61,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/qr-codes/{qrCode}', [QrController::class, 'destroy'])->name('qr-codes.destroy');
     Route::get('/qr-codes/{qrCode}/download', [QrController::class, 'download'])->name('qr-codes.download');
     Route::get('/qr-codes/history', [QrController::class, 'scanHistory'])->name('qr-codes.history');
+    Route::get('/qr-codes/history/export', [QrController::class, 'exportHistory'])->name('qr-codes.history.export');
 
     // Submissions
     Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
