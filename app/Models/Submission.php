@@ -15,6 +15,7 @@ class Submission extends Model
         'user_id',
         'is_checked',
         'photo_path',
+        'photo_data',
         'notes',
         'completed_at',
     ];

@@ -50,6 +50,7 @@ class SubmissionController extends Controller
                 [
                     'is_checked' => true,
                     'photo_path' => $photoPath,
+                    'photo_data' => $photoData, // Store base64 data as backup
                     'notes' => $request->notes[$itemId] ?? null,
                     'completed_at' => now(),
                 ]
@@ -71,17 +72,17 @@ class SubmissionController extends Controller
 
             // Create filename
             $filename = 'task_photo_' . $userId . '_' . $itemId . '_' . time() . '.jpg';
-            
+
             // For Railway deployment, save directly to public directory
             $publicPath = 'public/task_photos/';
             $fullPath = $publicPath . $filename;
-            
+
             // Ensure directory exists with error handling
             try {
                 if (!file_exists($publicPath)) {
                     mkdir($publicPath, 0755, true);
                 }
-                
+
                 // Double check directory exists
                 if (!is_dir($publicPath)) {
                     throw new \Exception('Failed to create directory: ' . $publicPath);

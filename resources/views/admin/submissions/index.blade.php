@@ -121,18 +121,22 @@
                                                 </div>
                                                 @endif
 
-                                                @if($submission->photo_path)
+                                                @if($submission->photo_path || $submission->photo_data)
                                                 <div class="row mt-3">
                                                     <div class="col-12">
                                                         <h6>Çekilen Fotoğraf</h6>
-                                                        @if(file_exists(public_path($submission->photo_path)))
+                                                        @if($submission->photo_path && file_exists(public_path($submission->photo_path)))
                                                             <img src="{{ asset($submission->photo_path) }}"
+                                                                 class="img-fluid rounded" alt="Görev Fotoğrafı"
+                                                                 style="max-height: 400px;">
+                                                        @elseif($submission->photo_data)
+                                                            <img src="data:image/jpeg;base64,{{ substr($submission->photo_data, strpos($submission->photo_data, ',') + 1) }}"
                                                                  class="img-fluid rounded" alt="Görev Fotoğrafı"
                                                                  style="max-height: 400px;">
                                                         @else
                                                             <div class="alert alert-warning">
                                                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                                                Fotoğraf dosyası bulunamadı: {{ $submission->photo_path }}
+                                                                Fotoğraf bulunamadı
                                                             </div>
                                                         @endif
                                                     </div>

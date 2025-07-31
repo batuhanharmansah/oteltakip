@@ -71,15 +71,19 @@
                                             @endif
                                         </div>
                                         <div class="col-md-6">
-                                            @if($submission->photo_path)
-                                                @if(file_exists(public_path($submission->photo_path)))
+                                            @if($submission->photo_path || $submission->photo_data)
+                                                @if($submission->photo_path && file_exists(public_path($submission->photo_path)))
                                                     <img src="{{ asset($submission->photo_path) }}"
+                                                         class="img-fluid rounded" alt="Görev Fotoğrafı"
+                                                         style="max-height: 200px;">
+                                                @elseif($submission->photo_data)
+                                                    <img src="data:image/jpeg;base64,{{ substr($submission->photo_data, strpos($submission->photo_data, ',') + 1) }}"
                                                          class="img-fluid rounded" alt="Görev Fotoğrafı"
                                                          style="max-height: 200px;">
                                                 @else
                                                     <div class="alert alert-warning">
                                                         <i class="fas fa-exclamation-triangle me-2"></i>
-                                                        Fotoğraf dosyası bulunamadı
+                                                        Fotoğraf bulunamadı
                                                     </div>
                                                 @endif
                                             @endif
