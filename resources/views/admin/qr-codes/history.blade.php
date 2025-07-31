@@ -215,7 +215,7 @@
                         <label for="user_filter" class="form-label">Çalışan</label>
                         <select name="user_id" id="user_filter" class="form-select">
                             <option value="">Tümü</option>
-                            @foreach($qrScans->pluck('user')->unique() as $user)
+                            @foreach($allUsers as $user)
                                 <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
                                     {{ $user->full_name }}
                                 </option>
@@ -226,7 +226,7 @@
                         <label for="location_filter" class="form-label">Lokasyon</label>
                         <select name="location" id="location_filter" class="form-select">
                             <option value="">Tümü</option>
-                            @foreach($qrScans->pluck('qrCode.location')->unique() as $location)
+                            @foreach($allLocations as $location)
                                 <option value="{{ $location }}" {{ request('location') == $location ? 'selected' : '' }}>
                                     {{ $location }}
                                 </option>

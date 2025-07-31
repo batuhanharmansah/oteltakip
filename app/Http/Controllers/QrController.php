@@ -63,7 +63,7 @@ class QrController extends Controller
             mkdir($directory, 0755, true);
         }
 
-        $filename = 'qr_' . $qrCode->id . '_' . $qrCode->type . '_' . time() . '.png';
+        $filename = 'qr_' . $qrCode->id . '_' . time() . '.png';
         $path = 'qrcodes/' . $filename;
 
         $writer = new PngWriter();
@@ -91,7 +91,7 @@ class QrController extends Controller
             $path = storage_path('app/public/' . $qrCode->image_path);
         }
 
-        return response()->download($path, 'qr_' . $qrCode->type . '_' . $qrCode->location . '.png');
+        return response()->download($path, 'qr_' . $qrCode->location . '.png');
     }
 
     /**
@@ -162,9 +162,10 @@ class QrController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('QR Scan Error: ' . $e->getMessage());
+            \Log::error('QR Scan Error Stack: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
-                'message' => 'QR kod taraması sırasında bir hata oluştu. Lütfen tekrar deneyin.'
+                'message' => 'QR kod taraması sırasında bir hata oluştu. Lütfen tekrar deneyin. Hata: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -195,7 +196,11 @@ class QrController extends Controller
 
         $qrScans = $query->latest()->paginate(20);
 
-        return view('admin.qr-codes.history', compact('qrScans'));
+        // Get all users and locations for filters
+        $allUsers = \App\Models\User::where('role', 'employee')->get();
+        $allLocations = QrCode::pluck('location')->unique();
+
+        return view('admin.qr-codes.history', compact('qrScans', 'allUsers', 'allLocations'));
     }
 
     /**
