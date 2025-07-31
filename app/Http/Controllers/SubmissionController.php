@@ -64,18 +64,27 @@ class SubmissionController extends Controller
      */
     private function savePhoto($base64Data, $userId, $itemId)
     {
-        // Extract data from base64 data URL
-        $data = substr($base64Data, strpos($base64Data, ',') + 1);
-        $data = base64_decode($data);
+        try {
+            // Extract data from base64 data URL
+            $data = substr($base64Data, strpos($base64Data, ',') + 1);
+            $data = base64_decode($data);
 
-        // Create filename
-        $filename = 'task_photo_' . $userId . '_' . $itemId . '_' . time() . '.jpg';
-        $path = 'task_photos/' . $filename;
+            // Create filename
+            $filename = 'task_photo_' . $userId . '_' . $itemId . '_' . time() . '.jpg';
+            $path = 'task_photos/' . $filename;
 
-        // Save to storage
-        \Storage::disk('public')->put($path, $data);
+            // Ensure directory exists
+            \Storage::disk('public')->makeDirectory('task_photos');
 
-        return $path;
+            // Save to storage
+            \Storage::disk('public')->put($path, $data);
+
+            \Log::info('Photo saved successfully: ' . $path);
+            return $path;
+        } catch (\Exception $e) {
+            \Log::error('Photo save error: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**

@@ -72,9 +72,16 @@
                                         </div>
                                         <div class="col-md-6">
                                             @if($submission->photo_path)
-                                                <img src="{{ Storage::url($submission->photo_path) }}"
-                                                     class="img-fluid rounded" alt="Görev Fotoğrafı"
-                                                     style="max-height: 200px;">
+                                                @if(Storage::disk('public')->exists($submission->photo_path))
+                                                    <img src="{{ Storage::url($submission->photo_path) }}"
+                                                         class="img-fluid rounded" alt="Görev Fotoğrafı"
+                                                         style="max-height: 200px;">
+                                                @else
+                                                    <div class="alert alert-warning">
+                                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                                        Fotoğraf dosyası bulunamadı
+                                                    </div>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -134,7 +141,7 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <video id="camera" autoplay style="max-width: 100%; height: 400px; border-radius: 10px;"></video>
+                    <video id="camera" autoplay style="max-width: 100%; max-height: 300px; border-radius: 10px; object-fit: cover;"></video>
                     <canvas id="canvas" style="display: none;"></canvas>
                 </div>
                 <div class="text-center mt-3">

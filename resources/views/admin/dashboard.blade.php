@@ -210,9 +210,16 @@
                                                 <div class="row mt-3">
                                                     <div class="col-12">
                                                         <h6>Çekilen Fotoğraf</h6>
-                                                        <img src="{{ Storage::url($submission->photo_path) }}"
-                                                             class="img-fluid rounded" alt="Görev Fotoğrafı"
-                                                             style="max-height: 400px;">
+                                                        @if(Storage::disk('public')->exists($submission->photo_path))
+                                                            <img src="{{ Storage::url($submission->photo_path) }}"
+                                                                 class="img-fluid rounded" alt="Görev Fotoğrafı"
+                                                                 style="max-height: 400px;">
+                                                        @else
+                                                            <div class="alert alert-warning">
+                                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                                Fotoğraf dosyası bulunamadı: {{ $submission->photo_path }}
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 @endif
