@@ -125,8 +125,8 @@
                                                 <div class="row mt-3">
                                                     <div class="col-12">
                                                         <h6>Çekilen Fotoğraf</h6>
-                                                        @if(Storage::disk('public')->exists($submission->photo_path))
-                                                            <img src="{{ Storage::url($submission->photo_path) }}"
+                                                        @if(file_exists(public_path($submission->photo_path)))
+                                                            <img src="{{ asset($submission->photo_path) }}"
                                                                  class="img-fluid rounded" alt="Görev Fotoğrafı"
                                                                  style="max-height: 400px;">
                                                         @else

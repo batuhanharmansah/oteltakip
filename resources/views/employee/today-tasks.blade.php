@@ -72,8 +72,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             @if($submission->photo_path)
-                                                @if(Storage::disk('public')->exists($submission->photo_path))
-                                                    <img src="{{ Storage::url($submission->photo_path) }}"
+                                                @if(file_exists(public_path($submission->photo_path)))
+                                                    <img src="{{ asset($submission->photo_path) }}"
                                                          class="img-fluid rounded" alt="Görev Fotoğrafı"
                                                          style="max-height: 200px;">
                                                 @else

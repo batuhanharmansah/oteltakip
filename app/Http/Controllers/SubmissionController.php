@@ -71,21 +71,26 @@ class SubmissionController extends Controller
 
             // Create filename
             $filename = 'task_photo_' . $userId . '_' . $itemId . '_' . time() . '.jpg';
-            $path = 'task_photos/' . $filename;
-
+            
+            // For Railway deployment, save directly to public directory
+            $publicPath = 'public/task_photos/';
+            $fullPath = $publicPath . $filename;
+            
             // Ensure directory exists
-            \Storage::disk('public')->makeDirectory('task_photos');
+            if (!file_exists($publicPath)) {
+                mkdir($publicPath, 0755, true);
+            }
 
-            // Save to storage
-            \Storage::disk('public')->put($path, $data);
+            // Save to public directory
+            file_put_contents($fullPath, $data);
 
             // Verify file was saved
-            if (!\Storage::disk('public')->exists($path)) {
+            if (!file_exists($fullPath)) {
                 throw new \Exception('File was not saved successfully');
             }
 
-            \Log::info('Photo saved successfully: ' . $path . ' (size: ' . strlen($data) . ' bytes)');
-            return $path;
+            \Log::info('Photo saved successfully: ' . $fullPath . ' (size: ' . strlen($data) . ' bytes)');
+            return 'task_photos/' . $filename; // Return relative path for database
         } catch (\Exception $e) {
             \Log::error('Photo save error: ' . $e->getMessage());
             \Log::error('Photo data length: ' . strlen($base64Data));
