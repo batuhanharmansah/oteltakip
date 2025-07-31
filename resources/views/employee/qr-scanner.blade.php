@@ -228,11 +228,14 @@ function startQRScanning() {
 
 function processQRCode(qrData) {
     // QR kod okundu, sunucuya gönder
-    fetch('{{ route("qr-scan") }}', {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const url = window.location.protocol + '//' + window.location.host + '/qr-scan';
+
+    fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken
         },
         body: JSON.stringify({
             code: qrData
