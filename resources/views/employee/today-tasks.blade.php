@@ -72,7 +72,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             @if($submission->photo_path)
-                                                <img src="{{ asset('storage/' . $submission->photo_path) }}"
+                                                <img src="{{ Storage::url($submission->photo_path) }}"
                                                      class="img-fluid rounded" alt="Görev Fotoğrafı"
                                                      style="max-height: 200px;">
                                             @endif
