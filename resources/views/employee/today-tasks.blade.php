@@ -35,7 +35,7 @@
                         <ul class="mb-0">
                             <li>Her görev maddesi için fotoğraf çekmeniz gerekiyor</li>
                             <li>Fotoğraf çekmeden görev tamamlanamaz</li>
-                            <li>Galeriden fotoğraf yükleme özelliği yoktur</li>
+                            <li>Kamera açıldığında "Çek" butonuna basın</li>
                             <li>Fotoğraflar otomatik olarak sisteme kaydedilir</li>
                         </ul>
                     </div>
@@ -93,9 +93,9 @@
                                                 <label class="form-label">Fotoğraf Çek</label>
                                                 <div class="d-grid">
                                                     <button type="button" class="btn btn-primary"
-                                                            onclick="openCamera({{ $item->id }})">
+                                                            onclick="startCamera({{ $item->id }})">
                                                         <i class="fas fa-camera me-2"></i>
-                                                        Fotoğraf Çek
+                                                        Kamera Başlat
                                                     </button>
                                                 </div>
                                                 <input type="hidden" name="photo_data[{{ $item->id }}]"
@@ -121,7 +121,7 @@
     </div>
 </div>
 
-<!-- Camera Modal -->
+<!-- Simple Camera Modal -->
 <div class="modal fade" id="cameraModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -134,17 +134,13 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <video id="camera" autoplay style="max-width: 100%; height: 400px;"></video>
+                    <video id="camera" autoplay style="max-width: 100%; height: 400px; border-radius: 10px;"></video>
                     <canvas id="canvas" style="display: none;"></canvas>
                 </div>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" id="captureBtn">
+                    <button type="button" class="btn btn-success btn-lg" id="captureBtn">
                         <i class="fas fa-camera me-2"></i>
                         Fotoğraf Çek
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="retakeBtn" style="display: none;">
-                        <i class="fas fa-redo me-2"></i>
-                        Tekrar Çek
                     </button>
                 </div>
             </div>
@@ -159,7 +155,7 @@
 let currentItemId = null;
 let stream = null;
 
-function openCamera(itemId) {
+function startCamera(itemId) {
     currentItemId = itemId;
     const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
     modal.show();
@@ -215,22 +211,21 @@ document.getElementById('captureBtn').addEventListener('click', function() {
     const preview = document.getElementById('photo_preview_' + currentItemId);
     preview.innerHTML = '<img src="' + photoData + '" class="img-fluid rounded" style="max-height: 150px;">';
 
-    // Modal'ı kapat
-    bootstrap.Modal.getInstance(document.getElementById('cameraModal')).hide();
-
     // Stream'i durdur
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
     }
 
-    checkFormCompletion();
-});
+    // Modal'ı kapat
+    bootstrap.Modal.getInstance(document.getElementById('cameraModal')).hide();
 
-document.getElementById('retakeBtn').addEventListener('click', function() {
-    document.getElementById('photo_preview_' + currentItemId).innerHTML = '';
-    document.getElementById('photo_data_' + currentItemId).value = '';
-    document.getElementById('captureBtn').style.display = 'inline-block';
-    document.getElementById('retakeBtn').style.display = 'none';
+    // Buton metnini değiştir
+    const button = document.querySelector(`button[onclick="startCamera(${currentItemId})"]`);
+    button.innerHTML = '<i class="fas fa-check me-2"></i>Fotoğraf Çekildi';
+    button.className = 'btn btn-success';
+    button.disabled = true;
+
+    checkFormCompletion();
 });
 
 // Modal kapandığında stream'i durdur
