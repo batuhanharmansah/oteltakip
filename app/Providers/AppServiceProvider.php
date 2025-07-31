@@ -20,7 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Schema::defaultStringLength(191);
+        // Only set schema default string length if database is available
+        try {
+            Schema::defaultStringLength(191);
+        } catch (\Exception $e) {
+            // Database not available during deployment, skip
+        }
 
         // Create storage directories if they don't exist
         $directories = [

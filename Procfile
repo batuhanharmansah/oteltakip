@@ -1,1 +1,1 @@
-web: php artisan storage:create-directories && php artisan storage:link && vendor/bin/heroku-php-apache2 public/
+web: php artisan db:create-file && php artisan storage:create-directories && php artisan storage:link && vendor/bin/heroku-php-apache2 public/
