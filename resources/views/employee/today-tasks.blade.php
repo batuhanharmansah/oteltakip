@@ -5,37 +5,69 @@
 @section('content')
 <style>
 .camera-modal .modal-dialog {
-    max-width: 300px;
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+}
+.camera-modal .modal-content {
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+}
+.camera-modal .modal-header {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    border: none;
+    padding: 1rem;
 }
 .camera-modal .modal-body {
-    padding: 0.75rem;
+    padding: 0;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
 }
 .camera-container {
+    flex: 1;
     width: 100%;
-    height: 150px;
-    overflow: hidden;
-    border-radius: 8px;
-    border: 2px solid #ddd;
     background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;
+    position: relative;
 }
 .camera-video {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     background: #000;
 }
 .camera-buttons {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    gap: 0.5rem;
-    justify-content: center;
+    gap: 1rem;
+    z-index: 1000;
 }
 .camera-buttons .btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    min-width: 120px;
+}
+.capture-btn {
+    background: #28a745;
+    border: none;
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+.capture-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
 }
 </style>
 <div class="row mb-4">
@@ -169,16 +201,16 @@
     </div>
 </div>
 
-<!-- Simple Camera Modal -->
+<!-- Full Screen Camera Modal -->
 <div class="modal fade camera-modal" id="cameraModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header py-2">
-                <h6 class="modal-title mb-0">
-                    <i class="fas fa-camera me-1"></i>
+            <div class="modal-header">
+                <h5 class="modal-title mb-0">
+                    <i class="fas fa-camera me-2"></i>
                     Fotoğraf Çek
-                </h6>
-                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="camera-container">
@@ -186,13 +218,9 @@
                 </div>
                 <canvas id="canvas" style="display: none;"></canvas>
                 <div class="camera-buttons">
-                    <button type="button" class="btn btn-success btn-sm" id="captureBtn">
-                        <i class="fas fa-camera me-1"></i>
-                        Çek
-                    </button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i>
-                        İptal
+                    <button type="button" class="btn capture-btn" id="captureBtn">
+                        <i class="fas fa-camera me-2"></i>
+                        Fotoğraf Çek
                     </button>
                 </div>
             </div>
@@ -212,12 +240,12 @@ function startCamera(itemId) {
     const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
     modal.show();
 
-    // Çok küçük çözünürlük kullan
+    // Tam ekran için yüksek çözünürlük kullan
     const constraints = {
         video: {
             facingMode: { exact: "environment" },
-            width: { ideal: 320, max: 640 },
-            height: { ideal: 240, max: 480 }
+            width: { ideal: 1920, max: 3840 },
+            height: { ideal: 1080, max: 2160 }
         }
     };
 
@@ -233,8 +261,8 @@ function startCamera(itemId) {
             navigator.mediaDevices.getUserMedia({
                 video: {
                     facingMode: "user",
-                    width: { ideal: 320, max: 640 },
-                    height: { ideal: 240, max: 480 }
+                    width: { ideal: 1920, max: 3840 },
+                    height: { ideal: 1080, max: 2160 }
                 }
             })
             .then(function(mediaStream) {
@@ -252,17 +280,17 @@ document.getElementById('captureBtn').addEventListener('click', function() {
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
 
-    // Küçük boyutlarda çek
-    canvas.width = 320;
-    canvas.height = 240;
-    context.drawImage(video, 0, 0, 320, 240);
+    // Tam ekran boyutlarda çek
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0);
 
-    const photoData = canvas.toDataURL('image/jpeg', 0.7); // Kaliteyi düşür
+    const photoData = canvas.toDataURL('image/jpeg', 0.9); // Yüksek kalite
     document.getElementById('photo_data_' + currentItemId).value = photoData;
 
     // Preview göster
     const preview = document.getElementById('photo_preview_' + currentItemId);
-    preview.innerHTML = '<img src="' + photoData + '" class="img-fluid rounded" style="max-height: 100px;">';
+    preview.innerHTML = '<img src="' + photoData + '" class="img-fluid rounded" style="max-height: 200px;">';
 
     // Stream'i durdur
     if (stream) {
