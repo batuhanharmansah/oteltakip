@@ -102,52 +102,7 @@
     </div>
 </div>
 
-<!-- Progress Cards Row -->
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="card progress-card">
-            <h6 class="card-title">Görev Tamamlama Oranı</h6>
-            @php
-                $totalTasks = $recentSubmissions->count();
-                $completedTasks = $recentSubmissions->where('is_checked', true)->count();
-                $completionRate = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
-            @endphp
-            <div class="progress-circle" style="background: conic-gradient(#27ae60 0deg {{ $completionRate * 3.6 }}deg, #e9ecef {{ $completionRate * 3.6 }}deg 360deg);">
-                <div class="progress-text">{{ round($completionRate) }}%</div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card progress-card">
-            <h6 class="card-title">QR Tarama Aktivitesi</h6>
-            @php
-                $qrActivity = min(($recentScans->count() / 10) * 100, 100);
-            @endphp
-            <div class="progress-circle" style="background: conic-gradient(#3498db 0deg {{ $qrActivity * 3.6 }}deg, #e9ecef {{ $qrActivity * 3.6 }}deg 360deg);">
-                <div class="progress-text">{{ round($qrActivity) }}%</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <div class="card progress-card">
-            <h6 class="card-title">Zaman Yönetimi</h6>
-            <div class="progress-circle" style="background: conic-gradient(#f39c12 0deg 180deg, #e9ecef 180deg 360deg);">
-                <div class="progress-text">50%</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <div class="card progress-card">
-            <h6 class="card-title">Performans Puanı</h6>
-            <div class="progress-circle" style="background: conic-gradient(#9b59b6 0deg 288deg, #e9ecef 288deg 360deg);">
-                <div class="progress-text">80%</div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Tables Row -->
 <div class="row">

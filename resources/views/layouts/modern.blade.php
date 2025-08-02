@@ -289,39 +289,7 @@
             color: var(--text-secondary);
         }
 
-        /* Progress Cards */
-        .progress-card {
-            text-align: center;
-            padding: 1.5rem;
-        }
 
-        .progress-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: conic-gradient(var(--primary-color) 0deg, #e9ecef 0deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            position: relative;
-        }
-
-        .progress-circle::before {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: white;
-        }
-
-        .progress-text {
-            position: relative;
-            z-index: 1;
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
 
         /* Buttons */
         .btn {
