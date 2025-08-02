@@ -144,41 +144,81 @@
 
                                 <!-- Modal for submission details -->
                                 <div class="modal fade" id="submissionModal{{ $submission->id }}" tabindex="-1">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 95%; margin: 1rem auto;">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">
+                                                    <i class="fas fa-clipboard-check me-2"></i>
                                                     Görev Detayları
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <h6>Çalışan Bilgileri</h6>
-                                                        <p><strong>Ad Soyad:</strong> {{ $submission->user->full_name }}</p>
-                                                        <p><strong>E-posta:</strong> {{ $submission->user->email }}</p>
-                                                        <p><strong>Telefon:</strong> {{ $submission->user->phone ?? 'Belirtilmemiş' }}</p>
+                                                <div class="row g-3">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body p-3">
+                                                                <h6 class="card-title mb-3">
+                                                                    <i class="fas fa-user me-2"></i>
+                                                                    Çalışan Bilgileri
+                                                                </h6>
+                                                                <div class="mb-2">
+                                                                    <small class="text-muted">Ad Soyad:</small>
+                                                                    <div class="fw-bold">{{ $submission->user->full_name }}</div>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <small class="text-muted">E-posta:</small>
+                                                                    <div class="fw-bold">{{ $submission->user->email }}</div>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <small class="text-muted">Telefon:</small>
+                                                                    <div class="fw-bold">{{ $submission->user->phone ?? 'Belirtilmemiş' }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <h6>Görev Bilgileri</h6>
-                                                        <p><strong>Checklist:</strong> {{ $submission->assignment->checklist->title }}</p>
-                                                        <p><strong>Madde:</strong> {{ $submission->item->content }}</p>
-                                                        <p><strong>Durum:</strong>
-                                                            @if($submission->is_checked)
-                                                                <span class="badge bg-success">Tamamlandı</span>
-                                                            @else
-                                                                <span class="badge bg-warning">Devam Ediyor</span>
-                                                            @endif
-                                                        </p>
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body p-3">
+                                                                <h6 class="card-title mb-3">
+                                                                    <i class="fas fa-tasks me-2"></i>
+                                                                    Görev Bilgileri
+                                                                </h6>
+                                                                <div class="mb-2">
+                                                                    <small class="text-muted">Checklist:</small>
+                                                                    <div class="fw-bold">{{ $submission->assignment->checklist->title }}</div>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <small class="text-muted">Madde:</small>
+                                                                    <div class="fw-bold">{{ $submission->item->content }}</div>
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <small class="text-muted">Durum:</small>
+                                                                    <div>
+                                                                        @if($submission->is_checked)
+                                                                            <span class="badge bg-success">Tamamlandı</span>
+                                                                        @else
+                                                                            <span class="badge bg-warning">Devam Ediyor</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 @if($submission->notes)
                                                 <div class="row mt-3">
                                                     <div class="col-12">
-                                                        <h6>Notlar</h6>
-                                                        <p class="border rounded p-3 bg-light">{{ $submission->notes }}</p>
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body p-3">
+                                                                <h6 class="card-title mb-3">
+                                                                    <i class="fas fa-sticky-note me-2"></i>
+                                                                    Notlar
+                                                                </h6>
+                                                                <p class="mb-0">{{ $submission->notes }}</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 @endif
@@ -186,32 +226,58 @@
                                                 @if($submission->photo_path || $submission->photo_data)
                                                 <div class="row mt-3">
                                                     <div class="col-12">
-                                                        <h6>Çekilen Fotoğraf</h6>
-                                                        @if($submission->photo_path && file_exists(public_path($submission->photo_path)))
-                                                            <img src="{{ asset($submission->photo_path) }}"
-                                                                 class="img-fluid rounded" alt="Görev Fotoğrafı"
-                                                                 style="max-height: 400px;">
-                                                        @elseif($submission->photo_data)
-                                                            <img src="data:image/jpeg;base64,{{ substr($submission->photo_data, strpos($submission->photo_data, ',') + 1) }}"
-                                                                 class="img-fluid rounded" alt="Görev Fotoğrafı"
-                                                                 style="max-height: 400px;">
-                                                        @else
-                                                            <div class="alert alert-warning">
-                                                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                                                Fotoğraf bulunamadı
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body p-3">
+                                                                <h6 class="card-title mb-3">
+                                                                    <i class="fas fa-camera me-2"></i>
+                                                                    Çekilen Fotoğraf
+                                                                </h6>
+                                                                @if($submission->photo_path && file_exists(public_path($submission->photo_path)))
+                                                                    <img src="{{ asset($submission->photo_path) }}"
+                                                                         class="img-fluid rounded" alt="Görev Fotoğrafı"
+                                                                         style="max-height: 300px; width: 100%; object-fit: cover;">
+                                                                @elseif($submission->photo_data)
+                                                                    <img src="data:image/jpeg;base64,{{ substr($submission->photo_data, strpos($submission->photo_data, ',') + 1) }}"
+                                                                         class="img-fluid rounded" alt="Görev Fotoğrafı"
+                                                                         style="max-height: 300px; width: 100%; object-fit: cover;">
+                                                                @else
+                                                                    <div class="alert alert-warning mb-0">
+                                                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                                                        Fotoğraf bulunamadı
+                                                                    </div>
+                                                                @endif
                                                             </div>
-                                                        @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 @endif
 
                                                 <div class="row mt-3">
-                                                    <div class="col-md-6">
-                                                        <h6>Zaman Bilgileri</h6>
-                                                        <p><strong>Oluşturulma:</strong> {{ $submission->created_at->format('d.m.Y H:i:s') }}</p>
-                                                        @if($submission->completed_at)
-                                                            <p><strong>Tamamlanma:</strong> {{ $submission->completed_at->format('d.m.Y H:i:s') }}</p>
-                                                        @endif
+                                                    <div class="col-12">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body p-3">
+                                                                <h6 class="card-title mb-3">
+                                                                    <i class="fas fa-clock me-2"></i>
+                                                                    Zaman Bilgileri
+                                                                </h6>
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-6">
+                                                                        <div class="mb-2">
+                                                                            <small class="text-muted">Oluşturulma:</small>
+                                                                            <div class="fw-bold">{{ $submission->created_at->format('d.m.Y H:i:s') }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if($submission->completed_at)
+                                                                    <div class="col-12 col-md-6">
+                                                                        <div class="mb-2">
+                                                                            <small class="text-muted">Tamamlanma:</small>
+                                                                            <div class="fw-bold">{{ $submission->completed_at->format('d.m.Y H:i:s') }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
