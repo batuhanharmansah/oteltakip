@@ -570,6 +570,32 @@
                 card.style.animationDelay = `${index * 0.1}s`;
                 card.classList.add('fade-in');
             });
+
+            // Submission detail modal handling
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('submission-detail-btn')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const submissionId = e.target.getAttribute('data-submission-id');
+                    const modal = document.getElementById('submissionModal' + submissionId);
+
+                    if (modal) {
+                        // Close all other modals first
+                        const allModals = document.querySelectorAll('.submission-detail-modal');
+                        allModals.forEach(m => {
+                            const bsModal = bootstrap.Modal.getInstance(m);
+                            if (bsModal) {
+                                bsModal.hide();
+                            }
+                        });
+
+                        // Show the target modal
+                        const bsModal = new bootstrap.Modal(modal);
+                        bsModal.show();
+                    }
+                }
+            });
         });
     </script>
 

@@ -69,9 +69,8 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-sm btn-outline-info"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#submissionModal{{ $submission->id }}">
+                                            <button type="button" class="btn btn-sm btn-outline-info submission-detail-btn"
+                                                    data-submission-id="{{ $submission->id }}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <a href="{{ route('admin.users.history', $submission->user) }}"
@@ -83,7 +82,7 @@
                                 </tr>
 
                                 <!-- Modal for submission details -->
-                                <div class="modal fade" id="submissionModal{{ $submission->id }}" tabindex="-1">
+                                <div class="modal fade submission-detail-modal" id="submissionModal{{ $submission->id }}" tabindex="-1" data-submission-id="{{ $submission->id }}">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 95%; margin: 1rem auto;">
                                         <div class="modal-content">
                                             <div class="modal-header">
