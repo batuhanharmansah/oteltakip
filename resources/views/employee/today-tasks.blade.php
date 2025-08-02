@@ -14,6 +14,12 @@
     height: 100vh;
     border-radius: 0;
     border: none;
+    /* Video player kontrollerini gizle */
+    overflow: hidden;
+}
+.camera-modal {
+    /* Video player kontrollerini gizle */
+    z-index: 9999;
 }
 .camera-modal .modal-header {
     background: rgba(0,0,0,0.8);
@@ -42,6 +48,14 @@
     height: 100%;
     object-fit: cover;
     background: #000;
+    /* Video player kontrollerini gizle */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    border: none;
+    /* Video kontrollerini tamamen kapat */
+    controls: none;
 }
 .camera-buttons {
     position: absolute;
@@ -214,7 +228,7 @@
             </div>
             <div class="modal-body">
                 <div class="camera-container">
-                    <video id="camera" autoplay class="camera-video"></video>
+                    <video id="camera" autoplay muted playsinline class="camera-video" controls="false"></video>
                 </div>
                 <canvas id="canvas" style="display: none;"></canvas>
                 <div class="camera-buttons">
@@ -246,13 +260,21 @@ function startCamera(itemId) {
             facingMode: { exact: "environment" },
             width: { ideal: 1920, max: 3840 },
             height: { ideal: 1080, max: 2160 }
-        }
+        },
+        audio: false // Ses kapalı
     };
 
     navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
             stream = mediaStream;
-            document.getElementById('camera').srcObject = mediaStream;
+            const video = document.getElementById('camera');
+            video.srcObject = mediaStream;
+            video.play();
+
+            // Video kontrollerini tamamen kapat
+            video.controls = false;
+            video.muted = true;
+            video.playsInline = true;
         })
         .catch(function(err) {
             console.error('Arka kamera bulunamadı:', err);
@@ -263,11 +285,19 @@ function startCamera(itemId) {
                     facingMode: "user",
                     width: { ideal: 1920, max: 3840 },
                     height: { ideal: 1080, max: 2160 }
-                }
+                },
+                audio: false // Ses kapalı
             })
             .then(function(mediaStream) {
                 stream = mediaStream;
-                document.getElementById('camera').srcObject = mediaStream;
+                const video = document.getElementById('camera');
+                video.srcObject = mediaStream;
+                video.play();
+
+                // Video kontrollerini tamamen kapat
+                video.controls = false;
+                video.muted = true;
+                video.playsInline = true;
             })
             .catch(function(err) {
                 alert('Kamera erişimi sağlanamadı: ' + err.message);
