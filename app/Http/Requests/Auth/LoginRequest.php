@@ -45,7 +45,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => 'E-posta adresi veya şifre hatalı.',
             ]);
         }
 
@@ -68,10 +68,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => 'Çok fazla başarısız giriş denemesi. Lütfen ' . ceil($seconds / 60) . ' dakika sonra tekrar deneyin.',
         ]);
     }
 

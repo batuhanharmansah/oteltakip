@@ -15,8 +15,12 @@ class EmployeeMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isEmployee()) {
-            return redirect('/dashboard')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (!auth()->user()->isEmployee()) {
+            return redirect()->route('admin.dashboard')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
         }
 
         return $next($request);

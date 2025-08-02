@@ -15,8 +15,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->isAdmin()) {
-            return redirect('/dashboard')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (!auth()->user()->isAdmin()) {
+            return redirect()->route('employee.dashboard')->with('error', 'Bu sayfaya erişim yetkiniz yok.');
         }
 
         return $next($request);

@@ -26,7 +26,7 @@ Route::get('/dashboard', function () {
     } else {
         return redirect()->route('employee.dashboard');
     }
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 // Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

@@ -39,12 +39,11 @@
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
 
                             <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                    onclick="confirmLogout(event)">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -85,12 +84,11 @@
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile">
                     @csrf
 
                     <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                            onclick="confirmLogout(event)">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>
@@ -98,3 +96,16 @@
         </div>
     </div>
 </nav>
+
+<script>
+function confirmLogout(event) {
+    event.preventDefault();
+
+    if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+        const form = event.target.closest('form');
+        if (form) {
+            form.submit();
+        }
+    }
+}
+</script>
