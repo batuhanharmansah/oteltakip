@@ -1,6 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+.camera-modal .modal-dialog {
+    max-width: 400px;
+}
+.camera-modal .modal-body {
+    padding: 1rem;
+}
+.camera-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.camera-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+</style>
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -133,8 +158,8 @@
 </div>
 
 <!-- Simple Camera Modal -->
-<div class="modal fade" id="cameraModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade camera-modal" id="cameraModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
@@ -145,15 +170,19 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <div style="max-width: 100%; max-height: 300px; overflow: hidden; border-radius: 10px; border: 2px solid #ddd;">
-                        <video id="camera" autoplay style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    <div class="camera-container">
+                        <video id="camera" autoplay class="camera-video"></video>
                     </div>
                     <canvas id="canvas" style="display: none;"></canvas>
                 </div>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-success btn-lg" id="captureBtn">
+                    <button type="button" class="btn btn-success" id="captureBtn">
                         <i class="fas fa-camera me-2"></i>
                         Fotoğraf Çek
+                    </button>
+                    <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        İptal
                     </button>
                 </div>
             </div>
@@ -173,12 +202,12 @@ function startCamera(itemId) {
     const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
     modal.show();
 
-    // Arka kamerayı kullan
+    // Daha küçük çözünürlük kullan
     const constraints = {
         video: {
             facingMode: { exact: "environment" },
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
+            width: { ideal: 640, max: 1280 },
+            height: { ideal: 480, max: 720 }
         }
     };
 
@@ -194,8 +223,8 @@ function startCamera(itemId) {
             navigator.mediaDevices.getUserMedia({
                 video: {
                     facingMode: "user",
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
+                    width: { ideal: 640, max: 1280 },
+                    height: { ideal: 480, max: 720 }
                 }
             })
             .then(function(mediaStream) {
