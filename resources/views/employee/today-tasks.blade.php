@@ -5,27 +5,37 @@
 @section('content')
 <style>
 .camera-modal .modal-dialog {
-    max-width: 400px;
+    max-width: 300px;
 }
 .camera-modal .modal-body {
-    padding: 1rem;
+    padding: 0.75rem;
 }
 .camera-container {
     width: 100%;
-    height: 200px;
+    height: 150px;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 2px solid #ddd;
     background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 0.5rem;
 }
 .camera-video {
     width: 100%;
     height: 100%;
     object-fit: contain;
     background: #000;
+}
+.camera-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+.camera-buttons .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
 }
 </style>
 <div class="row mb-4">
@@ -161,29 +171,27 @@
 
 <!-- Simple Camera Modal -->
 <div class="modal fade camera-modal" id="cameraModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-camera me-2"></i>
+            <div class="modal-header py-2">
+                <h6 class="modal-title mb-0">
+                    <i class="fas fa-camera me-1"></i>
                     Fotoğraf Çek
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </h6>
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="text-center">
-                    <div class="camera-container">
-                        <video id="camera" autoplay class="camera-video"></video>
-                    </div>
-                    <canvas id="canvas" style="display: none;"></canvas>
+                <div class="camera-container">
+                    <video id="camera" autoplay class="camera-video"></video>
                 </div>
-                <div class="text-center mt-3">
-                    <button type="button" class="btn btn-success" id="captureBtn">
-                        <i class="fas fa-camera me-2"></i>
-                        Fotoğraf Çek
+                <canvas id="canvas" style="display: none;"></canvas>
+                <div class="camera-buttons">
+                    <button type="button" class="btn btn-success btn-sm" id="captureBtn">
+                        <i class="fas fa-camera me-1"></i>
+                        Çek
                     </button>
-                    <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>
                         İptal
                     </button>
                 </div>
@@ -204,12 +212,12 @@ function startCamera(itemId) {
     const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
     modal.show();
 
-    // Daha küçük çözünürlük kullan
+    // Çok küçük çözünürlük kullan
     const constraints = {
         video: {
             facingMode: { exact: "environment" },
-            width: { ideal: 640, max: 1280 },
-            height: { ideal: 480, max: 720 }
+            width: { ideal: 320, max: 640 },
+            height: { ideal: 240, max: 480 }
         }
     };
 
@@ -225,8 +233,8 @@ function startCamera(itemId) {
             navigator.mediaDevices.getUserMedia({
                 video: {
                     facingMode: "user",
-                    width: { ideal: 640, max: 1280 },
-                    height: { ideal: 480, max: 720 }
+                    width: { ideal: 320, max: 640 },
+                    height: { ideal: 240, max: 480 }
                 }
             })
             .then(function(mediaStream) {
@@ -244,20 +252,17 @@ document.getElementById('captureBtn').addEventListener('click', function() {
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0);
+    // Küçük boyutlarda çek
+    canvas.width = 320;
+    canvas.height = 240;
+    context.drawImage(video, 0, 0, 320, 240);
 
-    const photoData = canvas.toDataURL('image/jpeg');
+    const photoData = canvas.toDataURL('image/jpeg', 0.7); // Kaliteyi düşür
     document.getElementById('photo_data_' + currentItemId).value = photoData;
-
-    // Debug log
-    console.log('Photo data length:', photoData.length);
-    console.log('Photo data preview:', photoData.substring(0, 100) + '...');
 
     // Preview göster
     const preview = document.getElementById('photo_preview_' + currentItemId);
-    preview.innerHTML = '<img src="' + photoData + '" class="img-fluid rounded" style="max-height: 150px;">';
+    preview.innerHTML = '<img src="' + photoData + '" class="img-fluid rounded" style="max-height: 100px;">';
 
     // Stream'i durdur
     if (stream) {
