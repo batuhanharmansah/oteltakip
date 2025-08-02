@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'QR Geçmişi')
 
 @section('content')
 <div class="row">
@@ -152,4 +154,4 @@
     flex-shrink: 0;
 }
 </style>
-@endsection 
+@endsection

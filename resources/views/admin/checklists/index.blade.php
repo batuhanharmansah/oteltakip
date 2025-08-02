@@ -1,13 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Checklist Yönetimi')
 
 @section('content')
-<div class="row">
+<div class="row mb-4">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">
-                <i class="fas fa-tasks me-2"></i>
-                Checklist Yönetimi
-            </h1>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1">Checklist Yönetimi</h2>
+                <p class="text-muted mb-0">Sistem checklist'lerini yönetin</p>
+            </div>
             <a href="{{ route('admin.checklists.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>
                 Yeni Checklist

@@ -1,12 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'QR Kod Okuyucu')
 
 @section('content')
-<div class="row">
+<div class="row mb-4">
     <div class="col-12">
-        <h1 class="h3 mb-4">
-            <i class="fas fa-qrcode me-2"></i>
-            QR Kod Okuyucu
-        </h1>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1">QR Kod Okuyucu</h2>
+                <p class="text-muted mb-0">QR kodları tarayın ve kayıt altına alın</p>
+            </div>
+            <a href="{{ route('employee.dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                Dashboard'a Dön
+            </a>
+        </div>
     </div>
 </div>
 

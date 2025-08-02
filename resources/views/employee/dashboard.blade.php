@@ -1,17 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Overview')
 
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <h1 class="h3 mb-4">
-            <i class="fas fa-tachometer-alt me-2"></i>
-            Çalışan Dashboard
-        </h1>
-        <p class="text-muted">Hoş geldin, {{ auth()->user()->full_name }}!</p>
-    </div>
-</div>
-
 @if($activeAssignment)
+<!-- Active Assignment Card -->
 <div class="row mb-4">
     <div class="col-12">
         <div class="card border-success">
@@ -44,6 +37,7 @@
     </div>
 </div>
 @else
+<!-- No Active Assignment -->
 <div class="row mb-4">
     <div class="col-12">
         <div class="card border-secondary">
@@ -61,6 +55,101 @@
 </div>
 @endif
 
+<!-- Stats Cards Row -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <div class="stats-number">{{ $recentScans->count() }}</div>
+            <div class="stats-label">QR Taramaları</div>
+            <div class="stats-subtitle">Bu ay</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <div class="stats-number">{{ $recentSubmissions->count() }}</div>
+            <div class="stats-label">Tamamlanan Görev</div>
+            <div class="stats-subtitle">Bu hafta</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stats-number">{{ $activeAssignment ? $activeAssignment->checklist->items->count() : 0 }}</div>
+            <div class="stats-label">Aktif Görev Maddesi</div>
+            <div class="stats-subtitle">Bugün</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stats-number">{{ $recentSubmissions->where('is_checked', false)->count() }}</div>
+            <div class="stats-label">Bekleyen Görev</div>
+            <div class="stats-subtitle">Devam ediyor</div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Cards Row -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Görev Tamamlama Oranı</h6>
+            @php
+                $totalTasks = $recentSubmissions->count();
+                $completedTasks = $recentSubmissions->where('is_checked', true)->count();
+                $completionRate = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
+            @endphp
+            <div class="progress-circle" style="background: conic-gradient(#27ae60 0deg {{ $completionRate * 3.6 }}deg, #e9ecef {{ $completionRate * 3.6 }}deg 360deg);">
+                <div class="progress-text">{{ round($completionRate) }}%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">QR Tarama Aktivitesi</h6>
+            @php
+                $qrActivity = min(($recentScans->count() / 10) * 100, 100);
+            @endphp
+            <div class="progress-circle" style="background: conic-gradient(#3498db 0deg {{ $qrActivity * 3.6 }}deg, #e9ecef {{ $qrActivity * 3.6 }}deg 360deg);">
+                <div class="progress-text">{{ round($qrActivity) }}%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Zaman Yönetimi</h6>
+            <div class="progress-circle" style="background: conic-gradient(#f39c12 0deg 180deg, #e9ecef 180deg 360deg);">
+                <div class="progress-text">50%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Performans Puanı</h6>
+            <div class="progress-circle" style="background: conic-gradient(#9b59b6 0deg 288deg, #e9ecef 288deg 360deg);">
+                <div class="progress-text">80%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables Row -->
 <div class="row">
     <div class="col-md-6 mb-4">
         <div class="card">
@@ -151,6 +240,7 @@
     </div>
 </div>
 
+<!-- Quick Actions -->
 <div class="row">
     <div class="col-12">
         <div class="card">

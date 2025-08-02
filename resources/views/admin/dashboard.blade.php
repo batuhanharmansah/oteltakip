@@ -1,81 +1,146 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Overview')
 
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <h1 class="h3 mb-4">
-            <i class="fas fa-tachometer-alt me-2"></i>
-            Admin Dashboard
-        </h1>
-    </div>
-</div>
-
+<!-- Stats Cards Row -->
 <div class="row mb-4">
     <div class="col-md-3 mb-3">
-        <div class="card bg-primary text-white">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stats-number">{{ $stats['total_users'] }}</div>
+            <div class="stats-label">Toplam Kullanıcı</div>
+            <div class="stats-subtitle">Son güncelleme</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="stats-number">{{ $stats['total_employees'] }}</div>
+            <div class="stats-label">Çalışanlar</div>
+            <div class="stats-subtitle">Aktif çalışan</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stats-number">{{ $stats['total_assignments'] }}</div>
+            <div class="stats-label">Atanmış Görevler</div>
+            <div class="stats-subtitle">Son saat</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <div class="stats-number">{{ $stats['total_qr_scans'] }}</div>
+            <div class="stats-label">QR Taramaları</div>
+            <div class="stats-subtitle">Güncellendi</div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Toplam Kullanıcı</h5>
-                        <h2 class="mb-0">{{ $stats['total_users'] }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-users fa-2x"></i>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Toplam Kazanç</h5>
+                    <span class="badge bg-success">+18%</span>
+                </div>
+                <h3 class="mb-2">₺34,657</h3>
+                <p class="text-muted small mb-3">SON ON ÇEYREKTE TOPLAM KAZANÇ</p>
+                <div style="height: 100px; background: linear-gradient(90deg, #27ae60, #2ecc71); border-radius: 8px; position: relative;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: rgba(255,255,255,0.2); border-radius: 8px;"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card bg-success text-white">
+    <div class="col-md-4 mb-3">
+        <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Çalışanlar</h5>
-                        <h2 class="mb-0">{{ $stats['total_employees'] }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-user-tie fa-2x"></i>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Toplam Abonelik</h5>
+                    <span class="badge bg-danger">-14%</span>
+                </div>
+                <h3 class="mb-2">169</h3>
+                <p class="text-muted small mb-3">SON 7 GÜNDE TOPLAM ABONELİK</p>
+                <div style="height: 100px; background: linear-gradient(90deg, #f39c12, #e67e22); border-radius: 8px; position: relative;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: rgba(255,255,255,0.2); border-radius: 8px;"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card bg-info text-white">
+    <div class="col-md-4 mb-3">
+        <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Atanmış Görevler</h5>
-                        <h2 class="mb-0">{{ $stats['total_assignments'] }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-tasks fa-2x"></i>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Toplam İndirme</h5>
+                    <span class="badge bg-warning">-51%</span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <div class="card bg-warning text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">QR Taramaları</h5>
-                        <h2 class="mb-0">{{ $stats['total_qr_scans'] }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-qrcode fa-2x"></i>
-                    </div>
+                <h3 class="mb-2">8,960</h3>
+                <p class="text-muted small mb-3">SON 6 YILDA TOPLAM İNDİRME</p>
+                <div style="height: 100px; background: linear-gradient(90deg, #9b59b6, #8e44ad); border-radius: 8px; position: relative;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80%; background: rgba(255,255,255,0.2); border-radius: 8px;"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Progress Cards Row -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Dashboard - Aylık satış hedefi</h6>
+            <div class="progress-circle" style="background: conic-gradient(#3498db 0deg 252deg, #e9ecef 252deg 360deg);">
+                <div class="progress-text">70%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Siparişler - Tamamlandı</h6>
+            <div class="progress-circle" style="background: conic-gradient(#27ae60 0deg 122deg, #e9ecef 122deg 360deg);">
+                <div class="progress-text">34%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Yeni Ziyaretçiler - Toplam sayıdan</h6>
+            <div class="progress-circle" style="background: conic-gradient(#f39c12 0deg 223deg, #e9ecef 223deg 360deg);">
+                <div class="progress-text">62%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card progress-card">
+            <h6 class="card-title">Abonelikler - Aylık bülten</h6>
+            <div class="progress-circle" style="background: conic-gradient(#e67e22 0deg 36deg, #e9ecef 36deg 360deg);">
+                <div class="progress-text">10%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables Row -->
 <div class="row">
     <div class="col-md-6 mb-4">
         <div class="card">
@@ -93,7 +158,7 @@
                                 <tr>
                                     <th>Çalışan</th>
                                     <th>Görev</th>
-                                    <th>Tarih</th>
+                                    <th>Durum</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -253,6 +318,7 @@
     </div>
 </div>
 
+<!-- Quick Actions -->
 <div class="row">
     <div class="col-12">
         <div class="card">

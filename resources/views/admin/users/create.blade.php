@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Yeni Kullanıcı')
 
 @section('content')
 <div class="row">

@@ -1,13 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'QR Kod Yönetimi')
 
 @section('content')
-<div class="row">
+<div class="row mb-4">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">
-                <i class="fas fa-qrcode me-2"></i>
-                QR Kod Yönetimi
-            </h1>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1">QR Kod Yönetimi</h2>
+                <p class="text-muted mb-0">Sistem QR kodlarını yönetin</p>
+            </div>
             <div>
                 <a href="{{ route('admin.qr-codes.history') }}" class="btn btn-info me-2">
                     <i class="fas fa-history me-2"></i>

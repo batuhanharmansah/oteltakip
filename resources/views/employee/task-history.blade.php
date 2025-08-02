@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Görev Geçmişi')
 
 @section('content')
 <div class="row">
@@ -132,4 +134,4 @@
     </div>
 </div>
 @endif
-@endsection 
+@endsection

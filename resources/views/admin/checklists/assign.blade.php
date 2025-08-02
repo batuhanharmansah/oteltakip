@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Görev Ata')
 
 @section('content')
 <div class="row">

@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Kullanıcı Geçmişi')
 
 @section('content')
 <div class="row">
@@ -41,7 +43,7 @@
                                 <p><strong>Ad Soyad:</strong> {{ $user->full_name }}</p>
                                 <p><strong>E-posta:</strong> {{ $user->email }}</p>
                                 <p><strong>Telefon:</strong> {{ $user->phone ?? 'Belirtilmemiş' }}</p>
-                                <p><strong>Rol:</strong> 
+                                <p><strong>Rol:</strong>
                                     @if($user->role == 'admin')
                                         <span class="badge bg-danger">Admin</span>
                                     @else
@@ -112,8 +114,8 @@
                                                 </td>
                                                 <td>{{ $submission->created_at->format('d.m.Y H:i') }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-sm btn-info" 
-                                                            data-bs-toggle="modal" 
+                                                    <button type="button" class="btn btn-sm btn-info"
+                                                            data-bs-toggle="modal"
                                                             data-bs-target="#submissionModal{{ $submission->id }}">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
@@ -255,4 +257,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

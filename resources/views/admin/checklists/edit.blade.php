@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.modern')
+
+@section('page-title', 'Checklist Düzenle')
 
 @section('content')
 <div class="row justify-content-center">
@@ -14,12 +16,12 @@
                 <form action="{{ route('admin.checklists.update', $checklist) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    
+
                     <div class="mb-3">
                         <label for="title" class="form-label">
                             <i class="fas fa-heading me-1"></i> Checklist Başlığı
                         </label>
-                        <input type="text" class="form-control @error('title') is-invalid @enderror" 
+                        <input type="text" class="form-control @error('title') is-invalid @enderror"
                                id="title" name="title" value="{{ old('title', $checklist->title) }}" required>
                         @error('title')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -30,7 +32,7 @@
                         <label for="description" class="form-label">
                             <i class="fas fa-align-left me-1"></i> Açıklama
                         </label>
-                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                        <textarea class="form-control @error('description') is-invalid @enderror"
                                   id="description" name="description" rows="3">{{ old('description', $checklist->description) }}</textarea>
                         @error('description')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -41,15 +43,15 @@
                         <label class="form-label">
                             <i class="fas fa-list-check me-1"></i> Checklist Maddeleri
                         </label>
-                        
+
                         <div id="items-container">
                             @foreach($checklist->items as $index => $item)
                                 <div class="item-row mb-3 p-3 border rounded bg-light">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control" 
-                                                   name="items[{{ $index }}][content]" 
-                                                   value="{{ $item->content }}" 
+                                            <input type="text" class="form-control"
+                                                   name="items[{{ $index }}][content]"
+                                                   value="{{ $item->content }}"
                                                    placeholder="Madde içeriği" required>
                                         </div>
                                         <div class="col-md-3">
@@ -70,7 +72,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        
+
                         <button type="button" class="btn btn-success" id="add-item">
                             <i class="fas fa-plus me-2"></i>
                             Madde Ekle
@@ -104,13 +106,13 @@ document.getElementById('add-item').addEventListener('click', function() {
     itemRow.innerHTML = `
         <div class="row">
             <div class="col-md-8">
-                <input type="text" class="form-control" 
-                       name="items[${itemIndex}][content]" 
+                <input type="text" class="form-control"
+                       name="items[${itemIndex}][content]"
                        placeholder="Madde içeriği" required>
             </div>
             <div class="col-md-3">
                 <select class="form-select" name="items[${itemIndex}][order]">
-                    ${Array.from({length: 20}, (_, i) => i + 1).map(num => 
+                    ${Array.from({length: 20}, (_, i) => i + 1).map(num =>
                         `<option value="${num}">Sıra ${num}</option>`
                     ).join('')}
                 </select>
@@ -133,4 +135,4 @@ document.addEventListener('click', function(e) {
 });
 </script>
 @endpush
-@endsection 
+@endsection
