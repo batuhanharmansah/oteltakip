@@ -75,7 +75,9 @@
                         <li><i class="fas fa-check text-success me-2"></i>Arka kamerayı seçin (önerilen)</li>
                         <li><i class="fas fa-check text-success me-2"></i>Kamerayı başlatın</li>
                         <li><i class="fas fa-check text-success me-2"></i>QR kodu kameraya gösterin</li>
-                        <li><i class="fas fa-check text-success me-2"></i>Otomatik olarak kaydedilecektir</li>
+                        <li><i class="fas fa-check text-success me-2"></i>İlk tarama: <strong>Giriş</strong></li>
+                        <li><i class="fas fa-check text-success me-2"></i>İkinci tarama: <strong>Çıkış</strong></li>
+                        <li><i class="fas fa-check text-success me-2"></i>Aynı QR kodu kullanabilirsiniz</li>
                     </ul>
 
                     <div class="alert alert-info mt-3">
@@ -272,8 +274,17 @@ function showResult(type, message, details = null) {
     messageDiv.textContent = message;
 
     if (details) {
+        const actionIcon = details.scan_type === 'check_in' ? 'fas fa-sign-in-alt' : 'fas fa-sign-out-alt';
+        const actionColor = details.scan_type === 'check_in' ? 'success' : 'info';
+        
         detailsDiv.innerHTML = `
-            <small class="text-muted">
+            <div class="mt-2">
+                <span class="badge bg-${actionColor}">
+                    <i class="${actionIcon} me-1"></i>
+                    ${details.action}
+                </span>
+            </div>
+            <small class="text-muted mt-2 d-block">
                 <strong>Lokasyon:</strong> ${details.location}<br>
                 <strong>Saat:</strong> ${details.scanned_at}
             </small>

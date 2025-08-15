@@ -40,6 +40,7 @@
                                     <th>Çalışan</th>
                                     <th>Lokasyon</th>
                                     <th>Tarama Tarihi</th>
+                                    <th>İşlem Türü</th>
                                     <th>Durum</th>
                                     <th>İşlemler</th>
                                 </tr>
@@ -61,6 +62,19 @@
                                             <strong>{{ $scan->scanned_at->format('d.m.Y') }}</strong><br>
                                             <small class="text-muted">{{ $scan->scanned_at->format('H:i:s') }}</small>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @if($scan->scan_type == 'check_in')
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-sign-in-alt me-1"></i>
+                                                Giriş
+                                            </span>
+                                        @else
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-sign-out-alt me-1"></i>
+                                                Çıkış
+                                            </span>
+                                        @endif
                                     </td>
                                     <td>
                                         @if($scan->scanned_at->isToday())
