@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\QrController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\ShiftReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -66,6 +67,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Submissions
     Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
     Route::get('/submissions/user/{userId}', [SubmissionController::class, 'byUser'])->name('submissions.by-user');
+
+    // Shift Reports
+    Route::get('/shift-reports', [ShiftReportController::class, 'index'])->name('shift-reports.index');
+    Route::get('/shift-reports/user/{user}', [ShiftReportController::class, 'userDetail'])->name('shift-reports.user-detail');
+    Route::get('/shift-reports/weekly', [ShiftReportController::class, 'weeklyReport'])->name('shift-reports.weekly');
+    Route::get('/shift-reports/monthly', [ShiftReportController::class, 'monthlyReport'])->name('shift-reports.monthly');
 });
 
 // Employee routes

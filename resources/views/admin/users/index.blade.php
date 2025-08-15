@@ -34,6 +34,8 @@
                                     <th>E-posta</th>
                                     <th>Telefon</th>
                                     <th>Rol</th>
+                                    <th>Vardiya</th>
+                                    <th>Çalışma Saatleri</th>
                                     <th>Kayıt Tarihi</th>
                                     <th>İşlemler</th>
                                 </tr>
@@ -49,6 +51,24 @@
                                             <span class="badge bg-danger">Admin</span>
                                         @else
                                             <span class="badge bg-primary">Çalışan</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($user->role == 'employee')
+                                            <span class="badge bg-{{ $user->shift_type == 'day' ? 'warning' : 'dark' }}">
+                                                {{ $user->shift_type_text }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($user->role == 'employee')
+                                            <small class="text-muted">
+                                                {{ $user->formatted_start_time }} - {{ $user->formatted_end_time }}
+                                            </small>
+                                        @else
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td>{{ $user->created_at->format('d.m.Y H:i') }}</td>

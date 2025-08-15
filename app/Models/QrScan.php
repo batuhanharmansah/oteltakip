@@ -13,6 +13,7 @@ class QrScan extends Model
         'user_id',
         'qr_code_id',
         'scanned_at',
+        'scan_type',
     ];
 
     protected $casts = [

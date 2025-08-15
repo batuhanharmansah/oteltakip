@@ -132,7 +132,7 @@ class QrController extends Controller
 
             $user = auth()->user();
 
-            // Check if already scanned today
+            // Check if already scanned today for this QR code
             $existingScan = QrScan::where('user_id', $user->id)
                 ->where('qr_code_id', $qrCode->id)
                 ->whereDate('scanned_at', now())
@@ -145,11 +145,19 @@ class QrController extends Controller
                 ], 400);
             }
 
+            // Determine scan type (check_in or check_out)
+            $todayScans = QrScan::where('user_id', $user->id)
+                ->whereDate('scanned_at', now())
+                ->count();
+
+            $scanType = $todayScans % 2 == 0 ? 'check_in' : 'check_out';
+
             // Create scan record
             QrScan::create([
                 'user_id' => $user->id,
                 'qr_code_id' => $qrCode->id,
                 'scanned_at' => now(),
+                'scan_type' => $scanType,
             ]);
 
             return response()->json([

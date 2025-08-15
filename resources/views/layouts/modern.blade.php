@@ -418,6 +418,12 @@
                                     Raporlar
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.shift-reports.index') }}" class="nav-link {{ request()->routeIs('admin.shift-reports.*') ? 'active' : '' }}">
+                                    <i class="fas fa-clock"></i>
+                                    Vardiya Raporları
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 @else

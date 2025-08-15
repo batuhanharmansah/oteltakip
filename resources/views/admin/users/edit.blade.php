@@ -146,6 +146,48 @@
                         </div>
                     </div>
 
+                    <!-- Vardiya Bilgileri (Sadece Çalışanlar için) -->
+                    <div id="shift-info" style="display: none;">
+                        <hr>
+                        <h6 class="mb-3">
+                            <i class="fas fa-clock me-2"></i>
+                            Vardiya Bilgileri
+                        </h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="shift_type" class="form-label">Vardiya Türü</label>
+                                <select class="form-select @error('shift_type') is-invalid @enderror" id="shift_type" name="shift_type">
+                                    <option value="day" {{ old('shift_type', $user->shift_type) == 'day' ? 'selected' : '' }}>Gündüz Vardiyası</option>
+                                    <option value="night" {{ old('shift_type', $user->shift_type) == 'night' ? 'selected' : '' }}>Gece Vardiyası</option>
+                                </select>
+                                @error('shift_type')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="start_time" class="form-label">Başlangıç Saati</label>
+                                <input type="time" class="form-control @error('start_time') is-invalid @enderror"
+                                       id="start_time" name="start_time" value="{{ old('start_time', $user->start_time ? date('H:i', strtotime($user->start_time)) : '08:00') }}">
+                                @error('start_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="end_time" class="form-label">Bitiş Saati</label>
+                                <input type="time" class="form-control @error('end_time') is-invalid @enderror"
+                                       id="end_time" name="end_time" value="{{ old('end_time', $user->end_time ? date('H:i', strtotime($user->end_time)) : '17:00') }}">
+                                @error('end_time')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-2"></i>
@@ -162,3 +204,23 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('role');
+    const shiftInfo = document.getElementById('shift-info');
+    
+    function toggleShiftInfo() {
+        if (roleSelect.value === 'employee') {
+            shiftInfo.style.display = 'block';
+        } else {
+            shiftInfo.style.display = 'none';
+        }
+    }
+    
+    roleSelect.addEventListener('change', toggleShiftInfo);
+    toggleShiftInfo(); // Initial check
+});
+</script>
+@endpush

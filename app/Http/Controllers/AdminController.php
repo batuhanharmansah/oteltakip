@@ -70,6 +70,9 @@ class AdminController extends Controller
             'emergency_contact_phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'role' => ['required', Rule::in(['admin', 'employee'])],
+            'shift_type' => ['nullable', Rule::in(['day', 'night'])],
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
         ]);
 
         User::create([
@@ -82,6 +85,9 @@ class AdminController extends Controller
             'emergency_contact_phone' => $request->emergency_contact_phone,
             'address' => $request->address,
             'role' => $request->role,
+            'shift_type' => $request->shift_type ?? 'day',
+            'start_time' => $request->start_time ?? '08:00:00',
+            'end_time' => $request->end_time ?? '17:00:00',
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Kullanıcı başarıyla oluşturuldu.');
@@ -109,6 +115,9 @@ class AdminController extends Controller
             'emergency_contact_phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
             'role' => ['required', Rule::in(['admin', 'employee'])],
+            'shift_type' => ['nullable', Rule::in(['day', 'night'])],
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
         ]);
 
         $user->update([
@@ -120,6 +129,9 @@ class AdminController extends Controller
             'emergency_contact_phone' => $request->emergency_contact_phone,
             'address' => $request->address,
             'role' => $request->role,
+            'shift_type' => $request->shift_type ?? $user->shift_type,
+            'start_time' => $request->start_time ?? $user->start_time,
+            'end_time' => $request->end_time ?? $user->end_time,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Kullanıcı başarıyla güncellendi.');
