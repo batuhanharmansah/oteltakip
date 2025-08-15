@@ -97,6 +97,25 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        .sidebar-current-page {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .current-page-info {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .current-page-info i {
+            color: var(--primary-color);
+        }
+
         .sidebar-nav {
             padding: 1rem 0;
         }
@@ -370,6 +389,13 @@
             </div>
         </div>
 
+        <div class="sidebar-current-page">
+            <div class="current-page-info">
+                <i class="fas fa-map-marker-alt me-2"></i>
+                <span id="currentPageName">Dashboard</span>
+            </div>
+        </div>
+
         <nav class="sidebar-nav">
             @auth
                 @if(auth()->user()->isAdmin())
@@ -379,13 +405,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                                     <i class="fas fa-tachometer-alt"></i>
-                                    Overview
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="fas fa-chart-bar"></i>
-                                    Stats
+                                    Dashboard
                                 </a>
                             </li>
                         </ul>
@@ -433,7 +453,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('employee.dashboard') }}" class="nav-link {{ request()->routeIs('employee.dashboard') ? 'active' : '' }}">
                                     <i class="fas fa-tachometer-alt"></i>
-                                    Overview
+                                    Dashboard
                                 </a>
                             </li>
                         </ul>
@@ -569,6 +589,36 @@
             document.querySelector('.sidebar').classList.toggle('show');
         });
 
+        // Function to update current page name in sidebar
+        function updateCurrentPageName() {
+            const currentPageElement = document.getElementById('currentPageName');
+            if (!currentPageElement) return;
+
+            // Get the active nav link
+            const activeNavLink = document.querySelector('.nav-link.active');
+            if (activeNavLink) {
+                const pageName = activeNavLink.textContent.trim();
+                currentPageElement.textContent = pageName;
+            } else {
+                // Fallback based on current URL
+                const path = window.location.pathname;
+                let pageName = 'Dashboard';
+                
+                if (path.includes('/users')) pageName = 'Kullanıcılar';
+                else if (path.includes('/checklists')) pageName = 'Görevler';
+                else if (path.includes('/qr-codes')) pageName = 'QR Kodlar';
+                else if (path.includes('/submissions')) pageName = 'Raporlar';
+                else if (path.includes('/shift-reports')) pageName = 'Vardiya Raporları';
+                else if (path.includes('/qr-scanner')) pageName = 'QR Kod Oku';
+                else if (path.includes('/today-tasks')) pageName = 'Bugünkü Görevler';
+                else if (path.includes('/task-history')) pageName = 'Görev Geçmişi';
+                else if (path.includes('/qr-history')) pageName = 'QR Geçmişi';
+                else if (path.includes('/profile')) pageName = 'Profil';
+                
+                currentPageElement.textContent = pageName;
+            }
+        }
+
         // Add fade-in animation to all cards
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.card');
@@ -576,6 +626,9 @@
                 card.style.animationDelay = `${index * 0.1}s`;
                 card.classList.add('fade-in');
             });
+
+            // Update current page name in sidebar
+            updateCurrentPageName();
 
             // Submission detail modal handling
             document.addEventListener('click', function(e) {
