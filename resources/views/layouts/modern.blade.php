@@ -638,7 +638,7 @@
         function setupSubmissionModalHandlers() {
             // Remove any existing event listeners
             document.removeEventListener('click', handleSubmissionModalClick);
-            
+
             // Add new event listener
             document.addEventListener('click', handleSubmissionModalClick);
         }
@@ -673,19 +673,18 @@
 
             // Show the target modal
             const bsModal = new bootstrap.Modal(modal);
-            
+
             // Add event listeners to prevent conflicts
             modal.addEventListener('hidden.bs.modal', function() {
                 button.disabled = false;
             }, { once: true });
-            
+
             modal.addEventListener('shown.bs.modal', function() {
                 // Modal successfully shown
             }, { once: true });
-            
+
             bsModal.show();
         }
-        });
     </script>
 
     @stack('scripts')
