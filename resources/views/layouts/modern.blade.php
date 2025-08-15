@@ -603,7 +603,7 @@
                 // Fallback based on current URL
                 const path = window.location.pathname;
                 let pageName = 'Dashboard';
-                
+
                 if (path.includes('/users')) pageName = 'Kullanıcılar';
                 else if (path.includes('/checklists')) pageName = 'Görevler';
                 else if (path.includes('/qr-codes')) pageName = 'QR Kodlar';
@@ -614,7 +614,7 @@
                 else if (path.includes('/task-history')) pageName = 'Görev Geçmişi';
                 else if (path.includes('/qr-history')) pageName = 'QR Geçmişi';
                 else if (path.includes('/profile')) pageName = 'Profil';
-                
+
                 currentPageElement.textContent = pageName;
             }
         }
@@ -630,31 +630,61 @@
             // Update current page name in sidebar
             updateCurrentPageName();
 
-            // Submission detail modal handling
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('submission-detail-btn')) {
-                    e.preventDefault();
-                    e.stopPropagation();
+            // Submission detail modal handling - Use event delegation to prevent conflicts
+            setupSubmissionModalHandlers();
+        });
 
-                    const submissionId = e.target.getAttribute('data-submission-id');
-                    const modal = document.getElementById('submissionModal' + submissionId);
+        // Setup submission modal handlers
+        function setupSubmissionModalHandlers() {
+            // Remove any existing event listeners
+            document.removeEventListener('click', handleSubmissionModalClick);
+            
+            // Add new event listener
+            document.addEventListener('click', handleSubmissionModalClick);
+        }
 
-                    if (modal) {
-                        // Close all other modals first
-                        const allModals = document.querySelectorAll('.submission-detail-modal');
-                        allModals.forEach(m => {
-                            const bsModal = bootstrap.Modal.getInstance(m);
-                            if (bsModal) {
-                                bsModal.hide();
-                            }
-                        });
+        // Handle submission modal clicks
+        function handleSubmissionModalClick(e) {
+            // Check if clicked element is a submission detail button
+            const button = e.target.closest('.submission-detail-btn');
+            if (!button) return;
 
-                        // Show the target modal
-                        const bsModal = new bootstrap.Modal(modal);
-                        bsModal.show();
-                    }
+            e.preventDefault();
+            e.stopPropagation();
+
+            const submissionId = button.getAttribute('data-submission-id');
+            if (!submissionId) return;
+
+            const modal = document.getElementById('submissionModal' + submissionId);
+            if (!modal) return;
+
+            // Prevent multiple rapid clicks
+            if (button.disabled) return;
+            button.disabled = true;
+
+            // Close all other modals first
+            const allModals = document.querySelectorAll('.submission-detail-modal');
+            allModals.forEach(m => {
+                const bsModal = bootstrap.Modal.getInstance(m);
+                if (bsModal) {
+                    bsModal.hide();
                 }
             });
+
+            // Show the target modal
+            const bsModal = new bootstrap.Modal(modal);
+            
+            // Add event listeners to prevent conflicts
+            modal.addEventListener('hidden.bs.modal', function() {
+                button.disabled = false;
+            }, { once: true });
+            
+            modal.addEventListener('shown.bs.modal', function() {
+                // Modal successfully shown
+            }, { once: true });
+            
+            bsModal.show();
+        }
         });
     </script>
 

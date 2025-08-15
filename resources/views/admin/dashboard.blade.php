@@ -1,6 +1,6 @@
 @extends('layouts.modern')
 
-@section('page-title', 'Overview')
+@section('page-title', 'Dashboard')
 
 @section('content')
 <!-- Stats Cards Row -->
