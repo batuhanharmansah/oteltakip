@@ -67,6 +67,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Submissions
     Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
     Route::get('/submissions/user/{userId}', [SubmissionController::class, 'byUser'])->name('submissions.by-user');
+    Route::get('/submissions/{submission}/show', [SubmissionController::class, 'showSubmission'])->name('submissions.show');
 
     // Shift Reports
     Route::get('/shift-reports', [ShiftReportController::class, 'index'])->name('shift-reports.index');

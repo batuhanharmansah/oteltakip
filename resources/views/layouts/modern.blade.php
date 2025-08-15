@@ -629,62 +629,7 @@
 
             // Update current page name in sidebar
             updateCurrentPageName();
-
-            // Submission detail modal handling - Use event delegation to prevent conflicts
-            setupSubmissionModalHandlers();
         });
-
-        // Setup submission modal handlers
-        function setupSubmissionModalHandlers() {
-            // Remove any existing event listeners
-            document.removeEventListener('click', handleSubmissionModalClick);
-
-            // Add new event listener
-            document.addEventListener('click', handleSubmissionModalClick);
-        }
-
-        // Handle submission modal clicks
-        function handleSubmissionModalClick(e) {
-            // Check if clicked element is a submission detail button
-            const button = e.target.closest('.submission-detail-btn');
-            if (!button) return;
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            const submissionId = button.getAttribute('data-submission-id');
-            if (!submissionId) return;
-
-            const modal = document.getElementById('submissionModal' + submissionId);
-            if (!modal) return;
-
-            // Prevent multiple rapid clicks
-            if (button.disabled) return;
-            button.disabled = true;
-
-            // Close all other modals first
-            const allModals = document.querySelectorAll('.submission-detail-modal');
-            allModals.forEach(m => {
-                const bsModal = bootstrap.Modal.getInstance(m);
-                if (bsModal) {
-                    bsModal.hide();
-                }
-            });
-
-            // Show the target modal
-            const bsModal = new bootstrap.Modal(modal);
-
-            // Add event listeners to prevent conflicts
-            modal.addEventListener('hidden.bs.modal', function() {
-                button.disabled = false;
-            }, { once: true });
-
-            modal.addEventListener('shown.bs.modal', function() {
-                // Modal successfully shown
-            }, { once: true });
-
-            bsModal.show();
-        }
     </script>
 
     @stack('scripts')

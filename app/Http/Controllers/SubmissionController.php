@@ -154,4 +154,17 @@ class SubmissionController extends Controller
 
         return view('admin.submissions.by-user', compact('user', 'submissions'));
     }
+
+    /**
+     * Show submission details for admin
+     */
+    public function showSubmission(Submission $submission)
+    {
+        // Check if user has permission to view this submission
+        if (auth()->user()->isAdmin() || auth()->user()->id === $submission->user_id) {
+            return view('admin.submissions.show', compact('submission'));
+        }
+
+        return redirect()->back()->with('error', 'Bu göreve erişim yetkiniz yok.');
+    }
 }
